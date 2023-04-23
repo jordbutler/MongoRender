@@ -22,9 +22,28 @@ app.get('/', function(req, res) {
   res.send(outstring);
 });
 
-app.get('/say/:name', function(req, res) {
-  res.send('Hello ' + req.params.name + '!');
-});
+app.delete('/delete', function(req, res) {
+  const searchKey = "{ ticketID: '" + req.body.ticketID + "' }";
+      console.log("Looking for: " + searchKey);
+      
+      async function run() {
+        try {
+          
+          const tickets = db.collection('cmps415mongodb');
+    
+          const query = { ticketID: '5589' };
+      
+          const ticket = await tickets.deleteOne(query);
+          console.log(ticket);
+          res.send('Deleted this: ' + JSON.stringify(ticket));  //Use stringify to print a json
+      
+        } finally {
+          // Ensures that the client will close when you finish/error
+          await client.close();
+        }
+      }
+      run().catch(console.dir);
+      });
 
 
 // Route to access database:
